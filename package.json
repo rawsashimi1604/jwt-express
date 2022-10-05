@@ -1,0 +1,42 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --verbose --coverage",
+    "start": "node --inspect=0.0.0.0 src/server.js",
+    "beautify": "npx prettier --write .",
+    "dev": "nodemon -L src/server.js",
+    "docker-compose-down": "docker-compose -f docker-compose.yml down",
+    "docker-compose-up:dev": "docker-compose -f docker-compose.yml up -d --build node-api-dev",
+    "docker:dev": "npm run docker-compose-down && npm run docker-compose-up:dev && docker-compose logs -f node-api-dev"
+  },
+  "engines": {
+    "node": "16.17.0",
+    "npm": "8.15.0"
+  },
+  "keywords": [],
+  "author": "Gavin Loo, rawsashimi1604",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.8.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.3",
+    "cross-env": "^7.0.3",
+    "jest": "^29.0.3",
+    "nodemon": "^2.0.19",
+    "prettier": "2.7.1",
+    "supertest": "^6.2.4"
+  },
+  "jest": {
+    "transform": {}
+  }
+}

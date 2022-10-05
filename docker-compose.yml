@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  node-api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+
+    volumes:
+      - ./:/app
+
+    environment:
+      - BACKEND_PORT=${BACKEND_PORT}
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - FRONTEND_APP_URL=${FRONTEND_APP_URL}
+
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres-express
+    image: postgres:14.5
+
+    ports:
+      - 5432:5432
+
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+    volumes:
+      # Default data directory for postgres (https://store.docker.com/images/022689bf-dfd8-408f-9e1c-19acac32e57b?tab=description)
+      - "postgres-data:/var/lib/postgresql/data"
+
+volumes:
+  postgres-data:
