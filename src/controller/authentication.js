@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import validateRegister from "../lib/authentication/validateRegister.js";
+import hashPassword from "../lib/authentication/hashPassword.js";
 
 function handleIndex(req, res) {
   res.send("Authentication route...");
@@ -19,6 +20,9 @@ async function handleAddUser(req, res) {
 
   // User object validated! Correct information passed
   if (validateRegister(user)) {
+    // Hash user password before storing in database
+    user.password = await hashPassword(user.password);
+
     const database = res.locals.database;
     const userAdded = await database.relations.user.addUser(user);
 

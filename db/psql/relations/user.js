@@ -12,8 +12,7 @@ function getAllUsers() {
 
 function addUser(user) {
   try {
-    const query =
-      "INSERT INTO user(username, password) VALUES ($1) RETURNING username";
+    const query = `INSERT INTO "user"(username, password) VALUES ($1, $2) RETURNING username`;
     const params = [user.username, user.password];
     return db.query(query, params);
   } catch (err) {

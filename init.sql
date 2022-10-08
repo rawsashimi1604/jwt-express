@@ -14,7 +14,7 @@ CREATE DATABASE defaultdb;
 CREATE TABLE IF NOT EXISTS "user"
 (
   username VARCHAR(16) PRIMARY KEY,
-  password VARCHAR(20)
+  password VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "vehicle"
@@ -24,12 +24,6 @@ CREATE TABLE IF NOT EXISTS "vehicle"
 );
 
 -- Seed data into tables
-INSERT INTO "user"(username, password)
-VALUES 
-('john123', 'password123'), 
-('mike123', 'password123'), 
-('jake123', 'password123');
-
 INSERT INTO vehicle("name")
 VALUES 
 ('Audi'), 
