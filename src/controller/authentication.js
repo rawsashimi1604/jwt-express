@@ -12,6 +12,9 @@ async function handleAllUsers(req, res) {
 
 async function handleAddUser(req, res) {
   const user = { name: req.body.name, password: req.body.password };
+  const database = res.locals.database;
+  const userAdded = await database.relations.user.addUser();
+  
 }
 
 export default {

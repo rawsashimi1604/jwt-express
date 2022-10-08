@@ -32,8 +32,8 @@ describe("GET /api/auth", () => {
   });
 });
 
-describe("GET /api/auth/users", () => {
-  const endpoint = "/api/auth/users";
+describe("GET /api/auth/user", () => {
+  const endpoint = "/api/auth/user/all";
 
   beforeEach(() => {
     getAllUsers.mockReset();
@@ -80,4 +80,37 @@ describe("GET /api/auth/users", () => {
       expect(response.statusCode).toBe(500);
     });
   });
+});
+
+describe("POST /api/auth/users", () => {
+  const endpoint = "/api/auth/user";
+
+  const validObject = {
+    username: 'john123',
+    password: 'password123',
+  }
+
+  beforeEach(() => {
+    addUser.mockReset();
+    addUser.mockResolvedValue({
+      rows: [{ username: 'john123' }],
+    });
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
+  describe("POST request sent", () => {
+    test("should respond with 200 status code", async () => {
+      const response = await request(app).post(endpoint).send(validObject);
+      expect(response.statusCode).toBe(200);
+    });
+
+    // Should receive json object
+    // Should receive object containing username
+    // should respond with 400 error if invalid object
+    // should respond with 500 error if server error
+  });
+  
 });

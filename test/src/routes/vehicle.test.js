@@ -92,6 +92,10 @@ describe("GET /api/vehicles/all", () => {
 describe("POST /api/vehicles", () => {
   const endpoint = "/api/vehicles";
 
+  const validObject = {
+    name: "Audi",
+  };
+
   beforeEach(() => {
     addVehicle.mockReset();
     addVehicle.mockResolvedValue({
@@ -99,29 +103,24 @@ describe("POST /api/vehicles", () => {
     });
   });
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   describe("POST request sent", () => {
     test("should respond with 200 status code", async () => {
-      const validObject = {
-        name: "Audi",
-      };
-
+      
       const response = await request(app).post(endpoint).send(validObject);
       expect(response.statusCode).toBe(200);
     });
 
     test("should respond with vehicle object", async () => {
-      const validObject = {
-        name: "Audi",
-      };
 
       const response = await request(app).post(endpoint).send(validObject);
       expect(response.body.name === "Audi").toBe(true);
     });
 
     test("should receive a json object", async () => {
-      const validObject = {
-        name: "Audi",
-      };
       const response = await request(app).post(endpoint).send(validObject);
       expect(response.headers["content-type"]).toEqual(
         expect.stringContaining("json")
@@ -138,9 +137,6 @@ describe("POST /api/vehicles", () => {
       addVehicle.mockImplementation(() => {
         throw new Error();
       });
-      const validObject = {
-        name: "Audi",
-      };
       const response = await request(app).post(endpoint).send(validObject);
       expect(response.statusCode).toBe(500);
     });
