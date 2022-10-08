@@ -9,7 +9,7 @@
     "start": "node --inspect=0.0.0.0 src/server.js",
     "beautify": "npx prettier --write .",
     "dev": "nodemon -L src/server.js",
-    "docker-compose-down": "docker-compose -f docker-compose.yml down",
+    "docker-compose-down": "docker-compose -f docker-compose.yml down --volumes",
     "docker-compose-up:dev": "docker-compose -f docker-compose.yml up -d --build node-api-dev",
     "docker:dev": "npm run docker-compose-down && npm run docker-compose-up:dev && docker-compose logs -f node-api-dev"
   },

@@ -1,6 +1,6 @@
 import express from "express";
 
-import AuthenticationController from "../controller/authentication";
+import AuthenticationController from "../controller/authentication.js";
 import asyncErrorHandler from "../lib/utils/asyncErrorHandler.js";
 
 export default function (database) {
@@ -17,6 +17,8 @@ export default function (database) {
 
   // Routes
   router.get("/", AuthenticationController.handleIndex);
+  router.get("/users", AuthenticationController.handleAllUsers);
+  router.post("/users", AuthenticationController.handleAddUser);
 
   return router;
 }

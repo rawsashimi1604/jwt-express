@@ -39,7 +39,9 @@ services:
 
     volumes:
       # Default data directory for postgres (https://store.docker.com/images/022689bf-dfd8-408f-9e1c-19acac32e57b?tab=description)
+      # Run database seeding script on start.
       - "postgres-data:/var/lib/postgresql/data"
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   postgres-data:
