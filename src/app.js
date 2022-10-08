@@ -38,7 +38,6 @@ export default function (database) {
   app.use("/api/vehicles", makeVehicleRouter(database));
   app.use("/api/auth", makeAuthRouter(database));
 
-
   // Default Route
   app.get("/", (req, res) => {
     res.send("Hello worldd!");

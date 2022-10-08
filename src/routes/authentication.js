@@ -17,8 +17,14 @@ export default function (database) {
 
   // Routes
   router.get("/", AuthenticationController.handleIndex);
-  router.get("/users", AuthenticationController.handleAllUsers);
-  router.post("/users", AuthenticationController.handleAddUser);
+  router.get(
+    "/users",
+    asyncErrorHandler(AuthenticationController.handleAllUsers)
+  );
+  router.post(
+    "/users",
+    asyncErrorHandler(AuthenticationController.handleAddUser)
+  );
 
   return router;
 }
