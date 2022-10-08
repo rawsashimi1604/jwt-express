@@ -7,7 +7,6 @@ import makeVehicleRouter from "./routes/vehicle.js";
 // Middleware imports
 import morgan from "morgan";
 import cors from "cors";
-import bodyParser from "body-parser";
 import ErrorMiddleware from "./middleware/error.js";
 
 export default function (database) {
