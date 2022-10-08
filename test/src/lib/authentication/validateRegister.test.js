@@ -2,13 +2,12 @@ import validateRegister from "../../../../src/lib/authentication/validateRegiste
 import { jest } from "@jest/globals";
 
 describe("test validateRegister()", () => {
-
   const validUsers = [
-    { username: "john123", password: "password123"},
-    { username: "asifasfijasfdi1", password: "ioasdf@oiaksd"},
-    { username: "mary", password: "123456"},
-    { username: "gavin", password: "08245-sjdf"},
-  ]
+    { username: "john123", password: "password123" },
+    { username: "asifasfijasfdi1", password: "ioasdf@oiaksd" },
+    { username: "mary", password: "123456" },
+    { username: "gavin", password: "08245-sjdf" },
+  ];
 
   test("should return true if user was valid", () => {
     for (const validUser of validUsers) {

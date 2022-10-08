@@ -86,14 +86,14 @@ describe("POST /api/auth/user", () => {
   const endpoint = "/api/auth/user";
 
   const validObject = {
-    username: 'john123',
-    password: 'password123',
-  }
+    username: "john123",
+    password: "password123",
+  };
 
   beforeEach(() => {
     addUser.mockReset();
     addUser.mockResolvedValue({
-      rows: [{ username: 'john123' }],
+      rows: [{ username: "john123" }],
     });
   });
 
@@ -113,9 +113,8 @@ describe("POST /api/auth/user", () => {
         expect.stringContaining("json")
       );
     });
-    
-    test("should respond with user object with username", async () => {
 
+    test("should respond with user object with username", async () => {
       const response = await request(app).post(endpoint).send(validObject);
       expect(response.body.username === "john123").toBe(true);
     });
@@ -125,7 +124,7 @@ describe("POST /api/auth/user", () => {
       const response = await request(app).post(endpoint).send(invalidObject);
       expect(response.statusCode).toBe(400);
     });
-    
+
     test("should respond with 500 status code when error is encountered", async () => {
       addUser.mockImplementation(() => {
         throw new Error();
@@ -134,5 +133,4 @@ describe("POST /api/auth/user", () => {
       expect(response.statusCode).toBe(500);
     });
   });
-  
 });

@@ -109,13 +109,11 @@ describe("POST /api/vehicles", () => {
 
   describe("POST request sent", () => {
     test("should respond with 200 status code", async () => {
-      
       const response = await request(app).post(endpoint).send(validObject);
       expect(response.statusCode).toBe(200);
     });
 
     test("should respond with vehicle object", async () => {
-
       const response = await request(app).post(endpoint).send(validObject);
       expect(response.body.name === "Audi").toBe(true);
     });
