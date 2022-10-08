@@ -1,4 +1,4 @@
-import validateDeleteVehicle from "../../../src/lib/vehicle/validateDeleteVehicle.js";
+import validateDeleteVehicle from "../../../../src/lib/vehicle/validateDeleteVehicle.js";
 import { jest } from "@jest/globals";
 
 describe("test validateDeleteVehicle()", () => {
