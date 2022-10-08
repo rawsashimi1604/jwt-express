@@ -3,6 +3,7 @@ import setupEnv from "./lib/utils/setupEnv.js";
 
 // Router imports
 import makeVehicleRouter from "./routes/vehicle.js";
+import makeAuthRouter from "./routes/authentication.js";
 
 // Middleware imports
 import morgan from "morgan";
@@ -35,6 +36,8 @@ export default function (database) {
 
   // Routes
   app.use("/api/vehicles", makeVehicleRouter(database));
+  app.use("/api/auth", makeAuthRouter(database));
+
 
   // Default Route
   app.get("/", (req, res) => {
