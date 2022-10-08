@@ -4,8 +4,8 @@ export default function validateRegister(userObject) {
   if (typeof(userObject) !== 'object') return false;
 
   // Check if require key value pairs exist
-  if (!("username" in userObject)) return false;
-  if (!("password" in userObject)) return false;
+  if (!(userObject["username"])) return false;
+  if (!(userObject["password"])) return false;
 
   // Check if password length is at least 6 characters long
   if (userObject.password.length < 6) return false;

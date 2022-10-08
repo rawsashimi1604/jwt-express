@@ -21,7 +21,7 @@ describe("test validateRegister()", () => {
     expect(validateRegister(invalidUser)).toBe(false);
   });
 
-  test("should return false if object was not passed in", () => {
+  test("should return false if key value pairs were not passed in", () => {
     const invalidUser = {};
     expect(validateRegister(invalidUser)).toBe(false);
   });

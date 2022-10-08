@@ -82,7 +82,7 @@ describe("GET /api/auth/user", () => {
   });
 });
 
-describe("POST /api/auth/users", () => {
+describe("POST /api/auth/user", () => {
   const endpoint = "/api/auth/user";
 
   const validObject = {
@@ -107,10 +107,32 @@ describe("POST /api/auth/users", () => {
       expect(response.statusCode).toBe(200);
     });
 
-    // Should receive json object
-    // Should receive object containing username
-    // should respond with 400 error if invalid object
-    // should respond with 500 error if server error
+    test("should receive a json object", async () => {
+      const response = await request(app).post(endpoint).send(validObject);
+      expect(response.headers["content-type"]).toEqual(
+        expect.stringContaining("json")
+      );
+    });
+    
+    test("should respond with user object with username", async () => {
+
+      const response = await request(app).post(endpoint).send(validObject);
+      expect(response.body.username === "john123").toBe(true);
+    });
+
+    test("should respond with 400 status code if invalid object", async () => {
+      const invalidObject = {};
+      const response = await request(app).post(endpoint).send(invalidObject);
+      expect(response.statusCode).toBe(400);
+    });
+    
+    test("should respond with 500 status code when error is encountered", async () => {
+      addUser.mockImplementation(() => {
+        throw new Error();
+      });
+      const response = await request(app).post(endpoint).send(validObject);
+      expect(response.statusCode).toBe(500);
+    });
   });
   
 });
