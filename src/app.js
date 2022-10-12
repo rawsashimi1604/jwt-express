@@ -2,8 +2,9 @@ import express from "express";
 import setupEnv from "./lib/utils/setupEnv.js";
 
 // Router imports
-import makeVehicleRouter from "./routes/vehicle.js";
 import makeAuthRouter from "./routes/authentication.js";
+import makeUserRouter from "./routes/user.js";
+import makeVehicleRouter from "./routes/vehicle.js";
 
 // Middleware imports
 import morgan from "morgan";
@@ -35,8 +36,9 @@ export default function (database) {
   app.use(cors(corsOptions));
 
   // Routes
-  app.use("/api/vehicles", makeVehicleRouter(database));
   app.use("/api/auth", makeAuthRouter(database));
+  app.use("/api/user", makeUserRouter(database));
+  app.use("/api/vehicles", makeVehicleRouter(database));
 
   // Default Route
   app.get("/", (req, res) => {
