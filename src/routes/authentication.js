@@ -1,19 +1,14 @@
 import express from "express";
 
 import AuthenticationController from "../controller/authentication.js";
+import injectDatabase from "../middleware/injectDatabase.js";
 import asyncErrorHandler from "../lib/utils/asyncErrorHandler.js";
 
 export default function (database) {
   const router = express.Router();
 
-  // Middleware that is specific to Auth Router..
-  router.use((req, res, next) => {
-    // Inject database to controllers (Dependency Injection)
-    res.locals.database = database;
-
-    // Continue next middleware function or route...
-    next();
-  });
+  // Inject Database passed from app into Auth Route...
+  router.use((req, res, next) => injectDatabase(req, res, next, database));
 
   // Routes
   router.get("/", AuthenticationController.handleIndex);

@@ -1,19 +1,14 @@
 import express from "express";
 
 import UserController from "../controller/user.js";
+import injectDatabase from "../middleware/injectDatabase.js";
 import asyncErrorHandler from "../lib/utils/asyncErrorHandler.js";
 
 export default function (database) {
   const router = express.Router();
 
-  // Middleware that is specific to User Router..
-  router.use((req, res, next) => {
-    // Inject database to controllers (Dependency Injection)
-    res.locals.database = database;
-
-    // Continue next middleware function or route...
-    next();
-  });
+  // Inject Database passed from app into user Route...
+  router.use((req, res, next) => injectDatabase(req, res, next, database));
 
   // Routes
   router.get("/", UserController.handleIndex);

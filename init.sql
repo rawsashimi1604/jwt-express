@@ -20,11 +20,12 @@ CREATE TABLE IF NOT EXISTS "user"
 CREATE TABLE IF NOT EXISTS "vehicle"
 (
   id BIGSERIAL PRIMARY KEY,
-  "name" TEXT
+  "name" TEXT,
+  owner VARCHAR(16)
 );
 
 -- Seed data into tables
-INSERT INTO vehicle("name")
+INSERT INTO vehicle("name", owner)
 VALUES 
 ('Audi'), 
 ('Honda'), 
