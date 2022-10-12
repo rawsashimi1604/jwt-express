@@ -1,4 +1,4 @@
-export default function validateRegister(userObject) {
+export default function validateUser(userObject) {
   // Check if object was passed in...
   if (typeof userObject !== "object") return false;
 

@@ -21,4 +21,28 @@ function addUser(user) {
   }
 }
 
-export default { getAllUsers, addUser };
+function checkUserExists(user) {
+  try {
+    const query = `SELECT 1
+    FROM "user"
+    WHERE username = $1`;
+    const params = [user.username];
+    return db.query(query, params);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+function getHashedUserPassword(user) {
+  try {
+    const query = `SELECT password FROM "user" WHERE username = $1`;
+    const params = [user.username];
+    return db.query(query, params);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export default { getAllUsers, addUser, checkUserExists, getHashedUserPassword };

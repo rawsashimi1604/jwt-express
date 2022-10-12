@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import validateRegister from "../lib/authentication/validateRegister.js";
-import hashPassword from "../lib/authentication/hashPassword.js";
+import validateUser from "../lib/authentication/validateUser.js";
+import bcrypt from "bcrypt";
 
 function handleIndex(req, res) {
   res.send("Authentication route...");
@@ -19,15 +19,55 @@ async function handleAddUser(req, res) {
   };
 
   // User object validated! Correct information passed
-  if (validateRegister(user)) {
-    // Hash user password before storing in database
-    user.password = await hashPassword(user.password);
-
+  if (validateUser(user)) {
     const database = res.locals.database;
-    const userAdded = await database.relations.user.addUser(user);
 
-    // User was registered , success..
-    res.status(200).send(userAdded.rows[0]);
+    // Hash password using bcrypt before storing in database
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(user.password, salt);
+    user.password = hashedPassword;
+
+    const checkUserExists = await database.relations.user.checkUserExists(user);
+
+    // If user already exists in database, cannot register.
+    if (checkUserExists.rows.length > 0) {
+      res.status(400).send("Failed to register.");
+    }
+
+    // Else, register should be successful.
+    else {
+      const userAdded = await database.relations.user.addUser(user);
+
+      // User was registered , success..
+      res.status(200).send(userAdded.rows[0]);
+    }
+  }
+
+  // Invalid object passed
+  else {
+    res.status(400).send("Invalid user object sent.");
+  }
+}
+
+async function handleUserLogin(req, res) {
+  const user = {
+    username: req.body["username"],
+    password: req.body["password"],
+  };
+
+  // User object was validated! Correct info was passed..
+  if (validateUser(user)) {
+    const database = res.locals.database;
+    const result = await database.relations.user.getHashedUserPassword(user);
+
+    // Password queried from DB
+    const hashedPassword = result.rows[0].password;
+
+    if (await bcrypt.compare(user.password, hashedPassword)) {
+      res.status(200).send({ username: user.username });
+    } else {
+      res.status(400).send("Invalid password.");
+    }
   }
 
   // Invalid object passed
@@ -40,4 +80,5 @@ export default {
   handleIndex,
   handleAllUsers,
   handleAddUser,
+  handleUserLogin,
 };
