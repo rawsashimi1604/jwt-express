@@ -17,12 +17,30 @@ async function handleUserLogin(req, res) {
     const database = res.locals.database;
     const result = await database.relations.user.getHashedUserPassword(user);
 
+    // If user does not exist return 400
+    const checkUserExists = await database.relations.user.checkUserExists(user);
+    console.log(checkUserExists);
+    if (checkUserExists.rows.length === 0)
+      return res.status(400).send("Invalid username.");
+
     // Password queried from DB
     const hashedPassword = result.rows[0].password;
 
     if (await bcrypt.compare(user.password, hashedPassword)) {
-      res.status(200).send({ username: user.username });
-    } else {
+      // Password was correct!
+      // Create JSON Web token, serialize user object
+      const serializedObject = { username: user.username };
+      const accessToken = jwt.sign(
+        serializedObject,
+        process.env.ACCESS_TOKEN_SECRET
+      );
+
+      // Return access token to logged in user.
+      res.status(200).send({ accessToken: accessToken });
+    }
+
+    // Incorrect password...
+    else {
       res.status(400).send("Invalid password.");
     }
   }

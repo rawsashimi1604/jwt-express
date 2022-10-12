@@ -38,6 +38,9 @@
     "supertest": "^6.2.4"
   },
   "jest": {
-    "transform": {}
+    "transform": {},
+    "setupFiles": [
+      "dotenv/config"
+    ]
   }
 }

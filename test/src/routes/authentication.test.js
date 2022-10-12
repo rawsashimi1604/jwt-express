@@ -3,16 +3,18 @@ import makeApp from "../../../src/app.js";
 import { jest } from "@jest/globals";
 
 // Stop logging
-beforeAll(() => {
-  global.console = { log: jest.fn() };
-});
+// beforeAll(() => {
+//   global.console = { log: jest.fn() };
+// });
 
 const getHashedUserPassword = jest.fn();
+const checkUserExists = jest.fn();
 
 const mockDB = {
   relations: {
     user: {
       getHashedUserPassword,
+      checkUserExists,
     },
   },
 };
@@ -48,6 +50,11 @@ describe("POST /api/auth/login", () => {
         },
       ],
     });
+
+    checkUserExists.mockReset();
+    checkUserExists.mockResolvedValue({
+      rows: [{ username: "john123" }],
+    });
   });
 
   afterAll(() => {
@@ -67,9 +74,21 @@ describe("POST /api/auth/login", () => {
       );
     });
 
-    test("should respond with user object with username if login was successful", async () => {
+    test("should respond with user object with accessToken if login was successful", async () => {
       const response = await request(app).post(endpoint).send(validObject);
-      expect(response.body.username === "john123").toBe(true);
+      expect("accessToken" in response.body).toBe(true);
+    });
+
+    test("should respond with 400 status code if user does not exist", async () => {
+      checkUserExists.mockImplementation(() => {
+        return { rows: [] };
+      });
+      const invalidObject = {
+        username: "invalidUsername",
+        password: "password123",
+      };
+      const response = await request(app).post(endpoint).send(invalidObject);
+      expect(response.statusCode).toBe(400);
     });
 
     test("should respond with 400 status code if invalid password", async () => {

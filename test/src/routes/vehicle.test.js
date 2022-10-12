@@ -21,6 +21,8 @@ const mockDB = {
   },
 };
 
+const TOKEN = process.env.ACCESS_TOKEN_SECRET;
+
 const app = makeApp(mockDB);
 
 describe("GET /api/vehicles", () => {
@@ -28,7 +30,9 @@ describe("GET /api/vehicles", () => {
 
   describe("GET request sent", () => {
     test("should respond with 200 status code", async () => {
-      const response = await request(app).get(endpoint);
+      const response = await request(app)
+        .get(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(200);
     });
   });
@@ -54,19 +58,25 @@ describe("GET /api/vehicles/all", () => {
 
   describe("GET request sent", () => {
     test("should receive a json object", async () => {
-      const response = await request(app).get(endpoint);
+      const response = await request(app)
+        .get(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.headers["content-type"]).toEqual(
         expect.stringContaining("json")
       );
     });
 
     test("should only call database query once", async () => {
-      const response = await request(app).get(endpoint);
+      const response = await request(app)
+        .get(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(getAllVehicles).toBeCalledTimes(1);
     });
 
     test("should respond with 200 status code", async () => {
-      const response = await request(app).get(endpoint);
+      const response = await request(app)
+        .get(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(200);
     });
 
@@ -74,14 +84,18 @@ describe("GET /api/vehicles/all", () => {
       getAllVehicles.mockImplementation(() => {
         throw new Error();
       });
-      const response = await request(app).get(endpoint);
+      const response = await request(app)
+        .get(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(500);
     });
 
     test("should receive a json object that contains vehicles", async () => {
       const vehicles = ["Honda", "Mitsubishi", "BMW"];
 
-      const response = await request(app).get(endpoint);
+      const response = await request(app)
+        .get(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       for (const vehicle of vehicles) {
         expect(response.body.some((item) => item.name === vehicle)).toBe(true);
       }
@@ -109,17 +123,26 @@ describe("POST /api/vehicles", () => {
 
   describe("POST request sent", () => {
     test("should respond with 200 status code", async () => {
-      const response = await request(app).post(endpoint).send(validObject);
+      const response = await request(app)
+        .post(endpoint)
+        .send(validObject)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(200);
     });
 
     test("should respond with vehicle object", async () => {
-      const response = await request(app).post(endpoint).send(validObject);
+      const response = await request(app)
+        .post(endpoint)
+        .send(validObject)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.body.name === "Audi").toBe(true);
     });
 
     test("should receive a json object", async () => {
-      const response = await request(app).post(endpoint).send(validObject);
+      const response = await request(app)
+        .post(endpoint)
+        .send(validObject)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.headers["content-type"]).toEqual(
         expect.stringContaining("json")
       );
@@ -127,7 +150,10 @@ describe("POST /api/vehicles", () => {
 
     test("should respond with 400 status code if invalid object", async () => {
       const invalidObject = {};
-      const response = await request(app).post(endpoint).send(invalidObject);
+      const response = await request(app)
+        .post(endpoint)
+        .send(invalidObject)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(400);
     });
 
@@ -135,7 +161,10 @@ describe("POST /api/vehicles", () => {
       addVehicle.mockImplementation(() => {
         throw new Error();
       });
-      const response = await request(app).post(endpoint).send(validObject);
+      const response = await request(app)
+        .post(endpoint)
+        .send(validObject)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(500);
     });
   });
@@ -159,13 +188,17 @@ describe("DELETE /api/vehicles/:id", () => {
   describe("DELETE request sent", () => {
     // should respond with 200 if delete success
     test("should respond with 200 if delete success", async () => {
-      const response = await request(app).delete(endpoint);
+      const response = await request(app)
+        .delete(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(200);
     });
 
     // should respond with json object if delete success
     test("should receive a json object", async () => {
-      const response = await request(app).delete(endpoint);
+      const response = await request(app)
+        .delete(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.headers["content-type"]).toEqual(
         expect.stringContaining("json")
       );
@@ -176,21 +209,27 @@ describe("DELETE /api/vehicles/:id", () => {
       deleteVehicleByID.mockImplementation(() => {
         throw new Error();
       });
-      const response = await request(app).delete(endpoint);
+      const response = await request(app)
+        .delete(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(500);
     });
 
     // should respond with 204 if delete failed
     test("should respond with 204 if delete failed", async () => {
       deleteVehicleByID.mockResolvedValue({ rowCount: 0 });
-      const response = await request(app).delete(endpoint);
+      const response = await request(app)
+        .delete(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(204);
     });
 
     // should respond with 400 if invalid id
     test("should respond with 400 if invalid id", async () => {
       endpoint = "/api/vehicles/randomString";
-      const response = await request(app).delete(endpoint);
+      const response = await request(app)
+        .delete(endpoint)
+        .set("Authorization", `Bearer ${TOKEN}`);
       expect(response.statusCode).toBe(400);
     });
   });

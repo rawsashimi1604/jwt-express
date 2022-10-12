@@ -3,6 +3,7 @@ import express from "express";
 import UserController from "../controller/user.js";
 import injectDatabase from "../middleware/injectDatabase.js";
 import asyncErrorHandler from "../lib/utils/asyncErrorHandler.js";
+import authenticateToken from "../middleware/authenticateToken.js";
 
 export default function (database) {
   const router = express.Router();

@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS "vehicle"
 );
 
 -- Seed data into tables
-INSERT INTO vehicle("name", owner)
+INSERT INTO vehicle("name")
 VALUES 
 ('Audi'), 
 ('Honda'), 
