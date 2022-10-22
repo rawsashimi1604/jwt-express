@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import validateUser from "../lib/authentication/validateUser.js";
+import generateAccessToken from "../lib/authentication/generateAccessToken.js";
 import bcrypt from "bcrypt";
 
 function handleIndex(req, res) {
@@ -30,13 +31,20 @@ async function handleUserLogin(req, res) {
       // Password was correct!
       // Create JSON Web token, serialize user object
       const serializedObject = { username: user.username };
-      const accessToken = jwt.sign(
+
+      // Generate access token
+      const accessToken = generateAccessToken(serializedObject);
+
+      // Generate refresh token as it expries in x seconds
+      const refreshToken = jwt.sign(
         serializedObject,
-        process.env.ACCESS_TOKEN_SECRET
+        process.env.REFRESH_TOKEN_SECRET
       );
 
       // Return access token to logged in user.
-      res.status(200).send({ accessToken: accessToken });
+      res
+        .status(200)
+        .send({ accessToken: accessToken, refreshToken: refreshToken });
     }
 
     // Incorrect password...
@@ -50,6 +58,11 @@ async function handleUserLogin(req, res) {
     res.status(400).send("Invalid user object sent.");
   }
 }
+
+// async function handleNewToken(req, res) {
+//   const refreshToken = req.body.token;
+
+// }
 
 export default {
   handleIndex,

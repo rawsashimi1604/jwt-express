@@ -79,6 +79,11 @@ describe("POST /api/auth/login", () => {
       expect("accessToken" in response.body).toBe(true);
     });
 
+    test("should respond with user object with refreshToken if login was successful", async () => {
+      const response = await request(app).post(endpoint).send(validObject);
+      expect("refreshToken" in response.body).toBe(true);
+    });
+
     test("should respond with 400 status code if user does not exist", async () => {
       checkUserExists.mockImplementation(() => {
         return { rows: [] };
