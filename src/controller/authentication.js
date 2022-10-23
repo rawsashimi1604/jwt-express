@@ -41,6 +41,10 @@ async function handleUserLogin(req, res) {
         process.env.REFRESH_TOKEN_SECRET
       );
 
+      // Push refresh token to database
+      const refreshTokenResult =
+        await database.relations.refresh_token.addToken(refreshToken);
+
       // Return access token to logged in user.
       res
         .status(200)
@@ -59,12 +63,68 @@ async function handleUserLogin(req, res) {
   }
 }
 
-// async function handleNewToken(req, res) {
-//   const refreshToken = req.body.token;
+async function handleUserLogout(req, res) {
+  // Log out user
+  // Remove refresh token from database
+  // User is now not authenticated...
 
-// }
+  const refreshToken = req.body.token;
+
+  // No token received from client
+  if (!refreshToken) {
+    return res.sendStatus(400);
+  }
+
+  // Remove token from database
+  const database = res.locals.database;
+  const deleteTokenResult = await database.relations.refresh_token.deleteToken(
+    refreshToken
+  );
+
+  res.sendStatus(200);
+}
+
+async function handleNewToken(req, res) {
+  // Gets refresh token from client
+  // Check if refresh token is valid (exists in database)
+
+  const refreshToken = req.body.token;
+
+  // No token received from client
+  if (!refreshToken) {
+    return res.sendStatus(400);
+  }
+
+  const database = res.locals.database;
+  const checkRefreshTokenExists =
+    await database.relations.refresh_token.checkTokenExists(refreshToken);
+
+  // Token does not exist in database
+  if (checkRefreshTokenExists.rows.length === 0) {
+    return res.sendStatus(400);
+  }
+
+  // Token exists... try to verify token
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    (err, serializedObject) => {
+      if (err) return res.sendStatus(400);
+
+      // Generate a new access token...
+      const accessToken = generateAccessToken({
+        username: serializedObject.username,
+      });
+
+      // Send new access token to client...
+      res.json({ accessToken: accessToken });
+    }
+  );
+}
 
 export default {
   handleIndex,
   handleUserLogin,
+  handleUserLogout,
+  handleNewToken,
 };

@@ -15,6 +15,8 @@ const deleteVehicleByID = jest.fn();
 const getHashedUserPassword = jest.fn();
 const checkUserExists = jest.fn();
 
+const addToken = jest.fn();
+
 getHashedUserPassword.mockReset();
 getHashedUserPassword.mockResolvedValue({
   rows: [
@@ -39,6 +41,9 @@ const mockDB = {
     user: {
       getHashedUserPassword,
       checkUserExists,
+    },
+    refresh_token: {
+      addToken,
     },
   },
 };

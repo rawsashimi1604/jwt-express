@@ -9,12 +9,15 @@ import { jest } from "@jest/globals";
 
 const getHashedUserPassword = jest.fn();
 const checkUserExists = jest.fn();
-
+const addToken = jest.fn();
 const mockDB = {
   relations: {
     user: {
       getHashedUserPassword,
       checkUserExists,
+    },
+    refresh_token: {
+      addToken,
     },
   },
 };

@@ -16,6 +16,10 @@ export default function (database) {
     "/login",
     asyncErrorHandler(AuthenticationController.handleUserLogin)
   );
+  router.post(
+    "/token",
+    asyncErrorHandler(AuthenticationController.handleNewToken)
+  );
 
   return router;
 }
