@@ -16,6 +16,7 @@ export default function (database) {
     "/login",
     asyncErrorHandler(AuthenticationController.handleUserLogin)
   );
+  router.post("logout", asyncErrorHandler(AuthenticationController.handleUserLogout));
   router.post(
     "/token",
     asyncErrorHandler(AuthenticationController.handleNewToken)
